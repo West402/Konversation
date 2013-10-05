@@ -20,13 +20,18 @@ build = (message) ->
 
 
 
-setAndBindPageSizes = () -> null
+setAndBindPageSizes = () -> 
+
+	setSize = () -> 
+
+		w = $(window).width()
+		$(".CONVO").width()
 
 
+	$(window).bind 'resize', -> 
+		setSize()
 
-
-
-
+	setSize()
 
 
 
