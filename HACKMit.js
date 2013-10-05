@@ -3,12 +3,12 @@ var escape = require('escape-html');
 var app = express();
 app.use(express.logger());
 app.use(express.bodyParser());
-app.engine('.html', require('ejs').renderFile);
+//app.engine('.html', require('ejs').renderFile);
 var swig = require('swig');
 
 app.use('/', express.static(__dirname + '/'));
 app.set('views', __dirname + '/views');
-app.set('view_engine', 'ejs');
+//app.set('view_engine', 'ejs');
 
 
 var FACEBOOK_APP_ID = "728970310453334";
@@ -17,11 +17,18 @@ var FACEBOOK_SECRET = "c83880e3888f67f60ca1369df27d688e";
 
 var graph = require('fbgraph');
 
+
+
+var authRedirect = process.env.REDIRECT_URI || 'http://localhost:5000';
+authRedirect += '/auth/facebook';
+
+console.log('AuthRedirect ' + authRedirect);
+
 var conf = {
 	client_id: FACEBOOK_APP_ID,
 	client_secret: FACEBOOK_SECRET,
 	scope: 'read_mailbox',
-	redirect_uri: 'http://localhost:5000/auth/facebook'
+	redirect_uri: authRedirect
 };
 app.use(app.router);
 /*
@@ -31,7 +38,7 @@ var facebook = new Facebook({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET});
 facebook.api('/TylerLubeck', function(err, data){
 	console.log(err);
 	console.log(data);
-})
+})localhost
 */
 /*
 app.use(express.cookieParser());
@@ -39,6 +46,7 @@ app.use(express.session({secret: FACEBOOK_SECRET}));
 app.use(express.session({appId: FACEBOOK_APP_ID}));
 app.use(Facebook.middleware({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET, scope: 'read_mailbox'}));
 */
+
 
 
 var mongo = require('mongodb');
