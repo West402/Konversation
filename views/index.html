@@ -18,7 +18,6 @@
 		
         {% if name %}
         	<div class="fade" id="firstButton">Hello {{name}} </div>
-        	
         {% else %}
         	<div class="fade" id="firstButton"><a href='/auth/facebook'>login with facebook</a></div>
         {% endif %}
@@ -37,7 +36,11 @@
 
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	{% if name %}
 	<script type="text/javascript" src="script/app.js"></script>
+	{% endif %}
+
+
 <body>
 
 
