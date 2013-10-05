@@ -43,14 +43,13 @@ var db = mongo.Db.connect(mongoUri, function(err, dbConnection) {
 var INSERT_PASSWORD = 'SETUP';
 
 app.get('/', Facebook.loginRequired({scope: 'read_mailbox'}), function(req, res){
-	req.facebook.api('/me/inbox', {limit: 50}, function(err, user) {
+	req.facebook.api('/me/inbox', function(err, user) {
 		/*
 		user.data.forEach(function(message){
 			console.log(message.comments);
 		});
 		*/
-
-		console.log(user.data[0].comments);
+		console.log(user);
 
 		//console.log(user);
 		res.writeHead(200, {'Content-Type': 'text/plain'});
