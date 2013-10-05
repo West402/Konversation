@@ -30,7 +30,13 @@ var conf = {
 	scope: 'read_mailbox',
 	redirect_uri: authRedirect
 };
+
+
+/* Session Storage Begin */
+app.use(express.cookieParser());
+app.use(express.session({secret: "avbpiubargu9badvar498vpbarv"}));
 app.use(app.router);
+
 /*
 var Facebook = require('facebook-node-sdk');
 
@@ -60,7 +66,12 @@ var db = mongo.Db.connect(mongoUri, function(err, dbConnection) {
 //	db.collection('squares').drop();
 });
 
+
+
+
+
 app.get('/auth/facebook', function(req, res) {
+	console.log(req.session);
 	if(!req.query.code) {
 		var authUrl = graph.getOauthUrl({
 			"client_id": conf.client_id,
@@ -82,7 +93,9 @@ app.get('/auth/facebook', function(req, res) {
       	"client_secret":  conf.client_secret,
       	"code":           req.query.code
 	}, function(err, facebookRes){
+		req.session.code = graph.getAccessToken();
 		//graph.setAccessToken(req.query.code);
+		console.log('RES: ' + graph.getAccessToken());
 		res.redirect('/');
 	});
 });
@@ -90,20 +103,27 @@ app.get('/auth/facebook', function(req, res) {
 
 app.get('/', function(req, response){
 
-	var query = "SELECT name FROM user WHERE uid = me()"
+	if(req.session.code){
+		var query = "SELECT name FROM user WHERE uid = me()"
+		graph.setAccessToken(req.session.code);
 
-	graph.fql(query, function(err, res){
-		console.log(res);
-		console.log(err);
-		//resStr = ejs.render("index.html", {name: "butt"});
-		//res.end(resStr);
-		if(res.data.length > 0) {
-			resStr = swig.renderFile('views/index.html', {name: res.data[0].name});
-		} else {
-			resStr = swig.renderFile('views/index.html', {name: null});
-		}
+		graph.fql(query, function(err, res){
+			console.log(res);
+			console.log(err);
+			//resStr = ejs.render("index.html", {name: "butt"});
+			//res.end(resStr);
+			if(res.data.length > 0) {
+				resStr = swig.renderFile('views/index.html', {name: res.data[0].name});
+			} else {
+				resStr = swig.renderFile('views/index.html', {name: null});
+			}
+			response.send(resStr);
+		});
+	} else {
+		resStr = swig.renderFile('views/index.html', {name: null});
 		response.send(resStr);
-	});
+	} 
+
 	//res.render("index.html");
 });
 
