@@ -55,6 +55,31 @@ body {
 
 }
 
+.moveUp {
+
+	transition: moveUP .3s ease-in-out;
+	-moz-transition: moveUP .3s ease-in-out;
+	-webkit-transition: moveUP .3s ease-in-out;
+
+} 
+
+@keyframes moveUP {
+	from { transform: translateY(0%); }
+	to { transform: translateY(-60%); }
+}
+
+@-webkit-keyframes moveUP {
+	from { -webkit-transform: translateY(0%); }
+	to { -webkit-transform: translateY(-60%); }
+}
+
+@-moz-keyframes moveUP {
+	from { -moz-transform: translateY(0%); }
+	to { -moz-transform: translateY(-60%); }
+}
+
+
+
 .FRIENDS {
 
 
@@ -67,7 +92,7 @@ body {
 
 
 
-	
+
 }
 
 .CONVO {
@@ -128,8 +153,8 @@ body {
 
 	opacity: 0.7;
 	cursor: pointer;
-	transition: opacity .4s ease-in-out;
-	-moz-transition: opacity .4s ease-in-out;
-	-webkit-transition: opacity .4s ease-in-out;
+	transition: opacity .3s ease-in-out;
+	-moz-transition: opacity .3s ease-in-out;
+	-webkit-transition: opacity .3s ease-in-out;
 
 } .fade:hover { opacity: 1.0; }
