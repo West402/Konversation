@@ -10,6 +10,8 @@ body {
 
 }
 
+a {	text-decoration: none; } 
+a:hover { text-decoration: underline; }
 
 
 .hidden {
@@ -21,13 +23,16 @@ body {
 .welcome {
 
 	position: absolute;
-	bottom: 10%;
 	left: 20%;
 	width: 60%;
 	text-align: center;
-	
 
-} .welcome h1 {
+}
+
+.initial { bottom: 10%; } .second { bottom: 80%; }
+
+
+.welcome h1 {
 
 	font-weight: 900;
 	font-size: 36px;
@@ -48,35 +53,17 @@ body {
 	text-decoration:none;
 	margin-top: 30px;
 
-} #firstButton:hover {
+} #firstButton a:hover, 
+  #firstButton a:active, 
+  #firstButton a:visited {
 
 	color: #3B5998;
-	text-decoration: underline;
-
-}
-
-.moveUp {
-
-	transition: moveUP .3s ease-in-out;
-	-moz-transition: moveUP .3s ease-in-out;
-	-webkit-transition: moveUP .3s ease-in-out;
 
 } 
 
-@keyframes moveUP {
-	from { transform: translateY(0%); }
-	to { transform: translateY(-60%); }
-}
 
-@-webkit-keyframes moveUP {
-	from { -webkit-transform: translateY(0%); }
-	to { -webkit-transform: translateY(-60%); }
-}
 
-@-moz-keyframes moveUP {
-	from { -moz-transform: translateY(0%); }
-	to { -moz-transform: translateY(-60%); }
-}
+
 
 
 
@@ -142,6 +129,29 @@ body {
 
 
 
+
+
+.move {
+
+	animation: MoveUp 1.8s ease-in-out;
+	-webkit-animation: MoveUp 1.8s ease-in-out;
+	-moz-animation: MoveUp 1.8s ease-in-out;
+}
+
+@keyframes MoveUp {
+	0% { bottom: 10%; }
+	100% { bottom: 80%; }
+}
+
+@-webkit-keyframes MoveUp {
+	0% { bottom: 10%; }
+	100% { bottom: 80%; }
+}
+
+@-moz-keyframes MoveUp {
+	0% { bottom: 10%; }
+	100% { bottom: 80%; }
+}
 
 
 
