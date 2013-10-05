@@ -3,12 +3,12 @@ var escape = require('escape-html');
 var app = express();
 app.use(express.logger());
 app.use(express.bodyParser());
-app.engine('.html', require('ejs').renderFile);
+//app.engine('.html', require('ejs').renderFile);
 var swig = require('swig');
 
 app.use('/', express.static(__dirname + '/'));
 app.set('views', __dirname + '/views');
-app.set('view_engine', 'ejs');
+//app.set('view_engine', 'ejs');
 
 
 var FACEBOOK_APP_ID = "728970310453334";
@@ -17,13 +17,26 @@ var FACEBOOK_SECRET = "c83880e3888f67f60ca1369df27d688e";
 
 var graph = require('fbgraph');
 
+
+
+var authRedirect = process.env.REDIRECT_URI || 'http://localhost:5000';
+authRedirect += '/auth/facebook';
+
+console.log('AuthRedirect ' + authRedirect);
+
 var conf = {
 	client_id: FACEBOOK_APP_ID,
 	client_secret: FACEBOOK_SECRET,
 	scope: 'read_mailbox',
-	redirect_uri: 'http://localhost:5000/auth/facebook'
+	redirect_uri: authRedirect
 };
+
+
+/* Session Storage Begin */
+app.use(express.cookieParser());
+app.use(express.session({secret: "avbpiubargu9badvar498vpbarv"}));
 app.use(app.router);
+
 /*
 var Facebook = require('facebook-node-sdk');
 
@@ -31,7 +44,7 @@ var facebook = new Facebook({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET});
 facebook.api('/TylerLubeck', function(err, data){
 	console.log(err);
 	console.log(data);
-})
+})localhost
 */
 /*
 app.use(express.cookieParser());
@@ -39,6 +52,7 @@ app.use(express.session({secret: FACEBOOK_SECRET}));
 app.use(express.session({appId: FACEBOOK_APP_ID}));
 app.use(Facebook.middleware({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET, scope: 'read_mailbox'}));
 */
+
 
 
 var mongo = require('mongodb');
@@ -52,7 +66,12 @@ var db = mongo.Db.connect(mongoUri, function(err, dbConnection) {
 //	db.collection('squares').drop();
 });
 
+
+
+
+
 app.get('/auth/facebook', function(req, res) {
+	console.log(req.session);
 	if(!req.query.code) {
 		var authUrl = graph.getOauthUrl({
 			"client_id": conf.client_id,
@@ -74,7 +93,9 @@ app.get('/auth/facebook', function(req, res) {
       	"client_secret":  conf.client_secret,
       	"code":           req.query.code
 	}, function(err, facebookRes){
+		req.session.code = graph.getAccessToken();
 		//graph.setAccessToken(req.query.code);
+		console.log('RES: ' + graph.getAccessToken());
 		res.redirect('/');
 	});
 });
@@ -82,20 +103,27 @@ app.get('/auth/facebook', function(req, res) {
 
 app.get('/', function(req, response){
 
-	var query = "SELECT name FROM user WHERE uid = me()"
+	if(req.session.code){
+		var query = "SELECT name FROM user WHERE uid = me()"
+		graph.setAccessToken(req.session.code);
 
-	graph.fql(query, function(err, res){
-		console.log(res);
-		console.log(err);
-		//resStr = ejs.render("index.html", {name: "butt"});
-		//res.end(resStr);
-		if(res.data.length > 0) {
-			resStr = swig.renderFile('views/index.html', {name: res.data[0].name});
-		} else {
-			resStr = swig.renderFile('views/index.html', {name: null});
-		}
+		graph.fql(query, function(err, res){
+			console.log(res);
+			console.log(err);
+			//resStr = ejs.render("index.html", {name: "butt"});
+			//res.end(resStr);
+			if(res.data.length > 0) {
+				resStr = swig.renderFile('views/index.html', {name: res.data[0].name});
+			} else {
+				resStr = swig.renderFile('views/index.html', {name: null});
+			}
+			response.send(resStr);
+		});
+	} else {
+		resStr = swig.renderFile('views/index.html', {name: null});
 		response.send(resStr);
-	});
+	} 
+
 	//res.render("index.html");
 });
 
