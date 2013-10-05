@@ -6,7 +6,7 @@
         "escape-html": "x",
         "express": "x",
         "ejs": "x",
-        "facebook-node-sdk": "x"
+        "fbgraph": "x"
     },
     "engines": {
         "node": "x",

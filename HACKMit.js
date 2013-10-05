@@ -12,20 +12,32 @@ app.set('views', __dirname + '/static');
 
 var FACEBOOK_APP_ID = "728970310453334";
 var FACEBOOK_SECRET = "c83880e3888f67f60ca1369df27d688e";
-var Facebook = require('facebook-node-sdk');
+
+
+var graph = require('fbgraph');
+
+var conf = {
+	client_id: FACEBOOK_APP_ID,
+	client_secret: FACEBOOK_SECRET,
+	scope: 'read_mailbox',
+	redirect_uri: 'http://localhost:5000/auth/facebook'
+};
+app.use(app.router);
 /*
+var Facebook = require('facebook-node-sdk');
+
 var facebook = new Facebook({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET});
 facebook.api('/TylerLubeck', function(err, data){
 	console.log(err);
 	console.log(data);
 })
 */
-
+/*
 app.use(express.cookieParser());
 app.use(express.session({secret: FACEBOOK_SECRET}));
 app.use(express.session({appId: FACEBOOK_APP_ID}));
 app.use(Facebook.middleware({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET, scope: 'read_mailbox'}));
-
+*/
 
 
 var mongo = require('mongodb');
@@ -39,16 +51,48 @@ var db = mongo.Db.connect(mongoUri, function(err, dbConnection) {
 //	db.collection('squares').drop();
 });
 
+app.get('/auth/facebook', function(req, res) {
+	if(!req.query.code) {
+		var authUrl = graph.getOauthUrl({
+			"client_id": conf.client_id,
+			"redirect_uri": conf.redirect_uri,
+			"scope": conf.scope
+		});
 
+		if (!req.query.error) {
+			res.redirect(authUrl);
+		} else {
+			res.send('access denied');
+		}
+		return;
+	}
+
+	graph.authorize({
+		"client_id":      conf.client_id,
+        "redirect_uri":   conf.redirect_uri,
+      	"client_secret":  conf.client_secret,
+      	"code":           req.query.code
+	}, function(err, facebookRes){
+		//graph.setAccessToken(req.query.code);
+		res.redirect('/');
+	});
+});
+
+
+app.get('/', function(req, res){
+	var query = "SELECT name FROM user WHERE uid = me()"
+	graph.fql(query, function(err, res){
+		console.log(err);
+		console.log(res);
+	});
+	res.send('home');
+});
+
+/*
 var INSERT_PASSWORD = 'SETUP';
 
 app.get('/', Facebook.loginRequired({scope: 'read_mailbox'}), function(req, res){
 	req.facebook.api('/me/inbox', function(err, user) {
-		/*
-		user.data.forEach(function(message){
-			console.log(message.comments);
-		});
-		*/
 		console.log(user);
 
 		//console.log(user);
@@ -61,6 +105,8 @@ app.get('/', Facebook.loginRequired({scope: 'read_mailbox'}), function(req, res)
 app.get('/convo', function(req, res) {
 
 });
+*/
+
 
 
 var port = process.env.PORT || 5000;
