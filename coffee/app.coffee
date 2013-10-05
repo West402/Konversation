@@ -7,19 +7,16 @@ $(document).ready -> buidpage()
 
 buidpage = () -> 
 
-	bindClickEvents()
+#	bindClickEvents()
+	askWhichFriend()
 
+#bindClickEvents = () -> null
 
-
-
-bindClickEvents = () -> 
-
-	$("#firstButton").click -> askWhichFriend()
 
 
 askWhichFriend = () -> 
 
-	$(".welcome").addClass("moveUp")
+	$(".welcome").delay(2000).removeClass("initial").addClass("move").delay(1800).addClass("second")
 
 
 buidConversation = () ->
