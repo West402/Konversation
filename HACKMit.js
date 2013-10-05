@@ -13,16 +13,14 @@ app.set('views', __dirname + '/views');
 
 var FACEBOOK_APP_ID = "728970310453334";
 var FACEBOOK_SECRET = "c83880e3888f67f60ca1369df27d688e";
-
-
 var graph = require('fbgraph');
 
 
-
+/*Auth Stuff Begin */
+var authBase = '/auth/facebook'
 var authRedirect = process.env.REDIRECT_URI || 'http://localhost:5000';
-authRedirect += '/auth/facebook';
-
-console.log('AuthRedirect ' + authRedirect);
+authRedirect += authBase;
+/*Auth Stuff End */
 
 var conf = {
 	client_id: FACEBOOK_APP_ID,
@@ -31,47 +29,33 @@ var conf = {
 	redirect_uri: authRedirect
 };
 
-
 /* Session Storage Begin */
-app.use(express.cookieParser());
-app.use(express.session({secret: "avbpiubargu9badvar498vpbarv"}));
-app.use(app.router);
-
-/*
-var Facebook = require('facebook-node-sdk');
-
-var facebook = new Facebook({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET});
-facebook.api('/TylerLubeck', function(err, data){
-	console.log(err);
-	console.log(data);
-})localhost
-*/
-/*
-app.use(express.cookieParser());
-app.use(express.session({secret: FACEBOOK_SECRET}));
-app.use(express.session({appId: FACEBOOK_APP_ID}));
-app.use(Facebook.middleware({appId: FACEBOOK_APP_ID, secret: FACEBOOK_SECRET, scope: 'read_mailbox'}));
-*/
-
-
-
-var mongo = require('mongodb');
-
 var mongoUri = process.env.MONGOLAB_URI || 
 	process.env.MONGOHQ_URI ||
 	'mongodb://localhost/HACKMit_db';
 
+var MongoStore = require('connect-mongo')(express);
+
+
+app.use(express.cookieParser());
+app.use(express.session({
+	store: new MongoStore({
+		url: mongoUri
+	}),
+	secret: "avbpiubargu9badvar498vpbarv",
+	}));
+app.use(app.router);
+/*Session Storage End */
+
+var mongo = require('mongodb');
+
+
 var db = mongo.Db.connect(mongoUri, function(err, dbConnection) {
 	db = dbConnection;
-//	db.collection('squares').drop();
 });
 
 
-
-
-
-app.get('/auth/facebook', function(req, res) {
-	console.log(req.session);
+app.get(authBase, function(req, res) {
 	if(!req.query.code) {
 		var authUrl = graph.getOauthUrl({
 			"client_id": conf.client_id,
@@ -94,11 +78,16 @@ app.get('/auth/facebook', function(req, res) {
       	"code":           req.query.code
 	}, function(err, facebookRes){
 		req.session.code = graph.getAccessToken();
-		//graph.setAccessToken(req.query.code);
-		console.log('RES: ' + graph.getAccessToken());
 		res.redirect('/');
 	});
 });
+
+app.get('/logout', function(req, response){
+	req.session.destroy();
+	response.redirect('/');
+})
+
+
 
 
 app.get('/', function(req, response){
@@ -108,10 +97,6 @@ app.get('/', function(req, response){
 		graph.setAccessToken(req.session.code);
 
 		graph.fql(query, function(err, res){
-			console.log(res);
-			console.log(err);
-			//resStr = ejs.render("index.html", {name: "butt"});
-			//res.end(resStr);
 			if(res.data.length > 0) {
 				resStr = swig.renderFile('views/index.html', {name: res.data[0].name});
 			} else {
@@ -123,29 +108,7 @@ app.get('/', function(req, response){
 		resStr = swig.renderFile('views/index.html', {name: null});
 		response.send(resStr);
 	} 
-
-	//res.render("index.html");
 });
-
-/*
-var INSERT_PASSWORD = 'SETUP';
-
-app.get('/', Facebook.loginRequired({scope: 'read_mailbox'}), function(req, res){
-	req.facebook.api('/me/inbox', function(err, user) {
-		console.log(user);
-
-		//console.log(user);
-		res.writeHead(200, {'Content-Type': 'text/plain'});
-		res.end('Hello, ' + user + '!');
-	});
-});
-
-
-app.get('/convo', function(req, res) {
-
-});
-*/
-
 
 
 var port = process.env.PORT || 5000;
