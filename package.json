@@ -6,10 +6,12 @@
         "escape-html": "x",
         "express": "x",
         "ejs": "x",
+        "swig": "x",
         "fbgraph": "x"
     },
     "engines": {
         "node": "x",
-        "npm": "x"
+        "npm": "x",
+        "ejs": "x"
     }
 }

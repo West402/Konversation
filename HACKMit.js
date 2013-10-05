@@ -1,13 +1,14 @@
 var express = require("express");
 var escape = require('escape-html');
 var app = express();
-app.use(express.static(__dirname + '/static'));
 app.use(express.logger());
 app.use(express.bodyParser());
-app.engine('html', require('ejs').renderFile)
+app.engine('.html', require('ejs').renderFile);
+var swig = require('swig');
 
-app.use('/', express.static(__dirname + '/static'));
-app.set('views', __dirname + '/static');
+app.use('/', express.static(__dirname + '/'));
+app.set('views', __dirname + '/views');
+app.set('view_engine', 'ejs');
 
 
 var FACEBOOK_APP_ID = "728970310453334";
@@ -79,13 +80,23 @@ app.get('/auth/facebook', function(req, res) {
 });
 
 
-app.get('/', function(req, res){
+app.get('/', function(req, response){
+
 	var query = "SELECT name FROM user WHERE uid = me()"
+
 	graph.fql(query, function(err, res){
-		console.log(err);
 		console.log(res);
+		console.log(err);
+		//resStr = ejs.render("index.html", {name: "butt"});
+		//res.end(resStr);
+		if(res.data.length > 0) {
+			resStr = swig.renderFile('views/index.html', {name: res.data[0].name});
+		} else {
+			resStr = swig.renderFile('views/index.html', {name: null});
+		}
+		response.send(resStr);
 	});
-	res.send('home');
+	//res.render("index.html");
 });
 
 /*
