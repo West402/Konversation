@@ -9,7 +9,7 @@ buidpage = () ->
 
 	bindClickEvents()
 	transition()
-	setAndBindPageSizes()
+	setAndBindPageSizes(8)
 
 
 transition = () -> 
@@ -18,11 +18,7 @@ transition = () ->
 					 .fadeTo(200, 0)
 					 .delay(200)
 					 .fadeTo(0, 0, askWhichFriend)
-###	$(".welcome").removeClass("initial")
-				 .addClass("move")
-				 .delay(1800)
-				 .addClass("second")
-###
+
 
 askWhichFriend = () -> 
 
@@ -71,7 +67,7 @@ buildConversation = (id, me) ->
 	$(".FRIENDS").fadeOut(200).addClass("hidden")
 	$(".welcome").addClass("moveDown").delay(600).fadeOut(400)
 	$(".logo").hide().removeClass("hidden").delay(1000).fadeIn(200, -> 
-		$(".ninja").height($(window).height()) )
+		setAndBindPageSizes(10) )
 
 	buildMessages = (conversation) -> 
 
@@ -89,16 +85,18 @@ buildConversation = (id, me) ->
 
 	$(".CONVO").removeClass("hidden")
 
+articleView =  () -> 
+
+	
 
 
-setAndBindPageSizes = () -> 
+
+
+setAndBindPageSizes = (r) -> 
 
 	setSizes = () -> 
-		#w = $(window).width()
 		h = $(window).height()
-		$(".ninja").height(8 * h / 10)
-		
-
+		$(".ninja").height(r * h / 10)
 
 	$(window).bind 'resize', -> 
 		setSizes()
