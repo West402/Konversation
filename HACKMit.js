@@ -3,7 +3,7 @@ var express = require("express");
 var escape = require('escape-html');
 var swig = require('swig');
 var app = express();
-var async = require('async');
+//var async = require('async');
 app.use(express.logger());
 app.use(express.bodyParser());
 app.use('/', express.static(__dirname + '/'));
