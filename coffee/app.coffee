@@ -7,7 +7,7 @@ $(document).ready -> buidpage()
 
 buidpage = () -> 
 
-#	bindClickEvents()
+	bindClickEvents()
 	transition()
 	setAndBindPageSizes()
 
@@ -94,7 +94,7 @@ buildConversation = (id, me) ->
 setAndBindPageSizes = () -> 
 
 	setSizes = () -> 
-		w = $(window).width()
+		#w = $(window).width()
 		h = $(window).height()
 		$(".ninja").height(8 * h / 10)
 		
@@ -107,7 +107,14 @@ setAndBindPageSizes = () ->
 
 
 
+bindClickEvents = () -> 
 
+	$(".logo").click -> 
+		$("#CONVO").fadeOut(200).children().remove()
+		$(".ninja").height(8 * h = $(window).height() / 10)
+		$(".welcome").removeClass("moveDown").fadeIn(200)
+		$(".logo").fadeOut(200)
+		askWhichFriend()
 
 
 

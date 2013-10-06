@@ -145,8 +145,8 @@ a:hover { text-decoration: underline; }
 	padding: 10px;
 	position: relative;
 	font-weight: 300;
-
-	width: 80%;
+	clear: both;
+	max-width: 80%;
 
 
 
@@ -154,13 +154,13 @@ a:hover { text-decoration: underline; }
 
 .to {
 
-	left: 0%;
+	float: right;
 	background-color: lightblue;
 
 } .from {
 
+	float: left;
 	background-color: lightgreen;
-	left: 10%;
 
 
 }
