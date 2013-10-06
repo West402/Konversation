@@ -134,7 +134,7 @@
   bindClickEvents = function() {
     return $(".logo").click(function() {
       var h;
-      $(".CONVO").fadeOut(200).children().remove();
+      $(".CONVO").children().remove();
       $(".ninja").height(8 * (h = $(window).height() / 10));
       $(".welcome").removeClass("moveDown").fadeIn(200);
       $(".logo").fadeOut(200);

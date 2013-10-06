@@ -70,7 +70,8 @@ buildConversation = (id, me) ->
 	$("#firstButton").fadeTo(200, 0)
 	$(".FRIENDS").fadeOut(200).addClass("hidden")
 	$(".welcome").addClass("moveDown").delay(600).fadeOut(400)
-	$(".logo").hide().removeClass("hidden").delay(1000).fadeIn(200, -> setAndBindPageSizes(10) )
+	$(".logo").hide().removeClass("hidden").delay(1000).fadeIn(200, -> 
+		setAndBindPageSizes(10) )
 
 	buildMessages = (conversation) -> 
 
@@ -109,7 +110,7 @@ setAndBindPageSizes = (r) ->
 bindClickEvents = () -> 
 
 	$(".logo").click -> 
-		$(".CONVO").fadeOut(200).children().remove()
+		$(".CONVO").children().remove()
 		$(".ninja").height(8 * h = $(window).height() / 10)
 		$(".welcome").removeClass("moveDown").fadeIn(200)
 		$(".logo").fadeOut(200)
