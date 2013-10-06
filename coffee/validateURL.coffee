@@ -1,8 +1,6 @@
 
 validateUrl = (message) ->
 
-	request = require("request")
-
 	links = []
 	finalLinks = []
 
@@ -15,6 +13,8 @@ validateUrl = (message) ->
 		if first_occur == -1 then break
 
 		end_occur = message.indexOf(" ", first_occur)
+
+		if end_occur == -1 then end_occur = message.length
 		
 		links.push message[first_occur..end_occur]
 		
@@ -29,6 +29,8 @@ validateUrl = (message) ->
 		if first_occur == -1 then break
 
 		end_occur = message.indexOf(" ", first_occur)
+
+		if end_occur == -1 then break
 		
 		links.push message[first_occur..end_occur]
 		
@@ -39,3 +41,6 @@ validateUrl = (message) ->
 			links[i] = "http://" + url
 
 	return links
+
+
+console.log validateUrl("www.facebook.com/sdfsdfsdf")
