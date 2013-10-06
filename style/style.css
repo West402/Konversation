@@ -94,7 +94,9 @@ a:hover { text-decoration: underline; }
 	width: 600px;
 	margin: auto;
 	position: relative;
-	
+	-webkit-mask-image: -webkit-gradient(linear, left 20%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+
+
 
 }
 
@@ -109,6 +111,7 @@ a:hover { text-decoration: underline; }
 	padding-bottom: 15px;
 	background-color: lightgray;
 
+	-webkit-mask-image: -webkit-gradient(linear, left 20%, left top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
 
 }
 
@@ -172,14 +175,6 @@ a:hover { text-decoration: underline; }
 
 
 
-
-
-
-/*
--webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))"
-
-*/
- 
 
 
 

@@ -25,36 +25,42 @@
 
 
   askWhichFriend = function() {
-    var friend, _i, _results;
+    var buildFriends;
     $("#firstButton").text("Please select a conversation...").delay(1000).fadeTo(300, 1).delay(2000);
+    $.get("/allFriends", buildFriends);
     $(".ninja").removeClass("hidden");
-    _results = [];
-    for (friend = _i = 0; _i <= 10; friend = ++_i) {
-      _results.push($(".FRIENDS").append($("<div/>", {
-        "class": "friend"
-      })));
-    }
-    return _results;
+    buildFriends = function(Friends) {
+      var build, friend, _i, _len, _results;
+      console.log(Friends);
+      build = function(friend) {
+        var $friend, $mostRecent, $name, $pic;
+        $friend = $("<div/>", {
+          "class": "friend",
+          id: "" + friend.name
+        });
+        $pic = $("<img/>", {
+          "class": "friendPIC",
+          src: "" + friends.pic_square
+        });
+        $name = $("<div/>", {
+          "class": "friendNAME",
+          text: "" + friend.name
+        });
+        $mostRecent = $("<div/>", {
+          "class": "FmostRECENT",
+          text: "" + friend.mostRecent
+        });
+        return $friend.append($pic).append($name).append($mostRecent);
+      };
+      _results = [];
+      for (_i = 0, _len = Friends.length; _i < _len; _i++) {
+        friend = Friends[_i];
+        _results.push($(".FRIENDS").append(build(friend)));
+      }
+      return _results;
+    };
+    return null;
   };
-
-  /*
-  
-  		build = (friend) -> 
-  
-  				$friend = $("<div/>", class: "friend", id: "#{friend.name}")
-  				$pic = $("<img/>", class: "friendPIC", src: "#{friends.pic_square}")
-  				$name = $("<div/>", class: "friendNAME", text: "#{friend.name}")
-  				$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{friend.mostRecent}")
-  				$friend.append($pic).append($name).append($mostRecent)
-  
-  		for friend in [0..10]  #Friends
-  			$(".FRIENDS").append( build(friend) )
-  
-  	buildFriends()
-  
-  #	$.get(/allfriends, )
-  */
-
 
   buidConversation = function() {
     var $convo, build, message, _i, _len;
@@ -79,7 +85,7 @@
       var h, w;
       w = $(window).width();
       h = $(window).height();
-      return $(".ninja").height(7.5 * h / 10);
+      return $(".ninja").height(9 * h / 10);
     };
     $(window).bind('resize', function() {
       return setSizes();

@@ -31,32 +31,30 @@ askWhichFriend = () ->
 					 .fadeTo(300, 1)
 					 .delay(2000)
 
+	$.get("/allFriends", buildFriends)
 
 
 	$(".ninja").removeClass("hidden")	
 
-#	buildFriends = () -> 
+	buildFriends = (Friends) ->
 
-	for friend in [0..10]  #Friends
-		$(".FRIENDS").append( $("<div/>", class: "friend") )
-
-###
+		console.log Friends
 
 		build = (friend) -> 
 
-				$friend = $("<div/>", class: "friend", id: "#{friend.name}")
-				$pic = $("<img/>", class: "friendPIC", src: "#{friends.pic_square}")
-				$name = $("<div/>", class: "friendNAME", text: "#{friend.name}")
-				$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{friend.mostRecent}")
-				$friend.append($pic).append($name).append($mostRecent)
+			$friend = $("<div/>", class: "friend", id: "#{friend.name}")
+			$pic = $("<img/>", class: "friendPIC", src: "#{friends.pic_square}")
+			$name = $("<div/>", class: "friendNAME", text: "#{friend.name}")
+			$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{friend.mostRecent}")
+			$friend.append($pic).append($name).append($mostRecent)
 
-		for friend in [0..10]  #Friends
+		for friend in Friends
 			$(".FRIENDS").append( build(friend) )
 
-	buildFriends()
 
-#	$.get(/allfriends, )
-###		
+	return null
+	
+	
 
 buidConversation = () ->
 
@@ -77,7 +75,7 @@ setAndBindPageSizes = () ->
 	setSizes = () -> 
 		w = $(window).width()
 		h = $(window).height()
-		$(".ninja").height(7.5 * h / 10)
+		$(".ninja").height(9 * h / 10)
 		
 
 
