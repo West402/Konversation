@@ -65,6 +65,29 @@ a:hover { text-decoration: underline; }
 
 
 
+.moveDown {
+
+	animation: MoveD 1.8s ease-in-out;
+	-webkit-animation: MoveD 1.8s ease-in-out;
+	-moz-animation: MoveD 1.8s ease-in-out;
+}
+
+@keyframes MoveD {
+	0% { bottom: 10%; }
+	100% { bottom: 80%; }
+}
+
+@-webkit-keyframes MoveD {
+	0% { bottom: 10%; }
+	100% { bottom: 80%; }
+}
+
+@-moz-keyframes MoveD {
+	0% { bottom: 10%; }
+	100% { bottom: 80%; }
+}
+
+
 
 
 .FRIENDS {
@@ -129,29 +152,6 @@ a:hover { text-decoration: underline; }
 
 
 
-
-
-.move {
-
-	animation: MoveUp 1.8s ease-in-out;
-	-webkit-animation: MoveUp 1.8s ease-in-out;
-	-moz-animation: MoveUp 1.8s ease-in-out;
-}
-
-@keyframes MoveUp {
-	0% { bottom: 10%; }
-	100% { bottom: 80%; }
-}
-
-@-webkit-keyframes MoveUp {
-	0% { bottom: 10%; }
-	100% { bottom: 80%; }
-}
-
-@-moz-keyframes MoveUp {
-	0% { bottom: 10%; }
-	100% { bottom: 80%; }
-}
 
 
 

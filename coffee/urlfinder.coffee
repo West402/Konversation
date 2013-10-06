@@ -1,0 +1,3 @@
+
+isValidUrl = (message_text) ->
+	
