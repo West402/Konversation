@@ -3,7 +3,7 @@ var express = require("express");
 var escape = require('escape-html');
 var swig = require('swig');
 var app = express();
-//var async = require('async');
+
 app.use(express.logger());
 app.use(express.bodyParser());
 app.use('/', express.static(__dirname + '/'));
@@ -49,6 +49,69 @@ app.set('views', __dirname + '/views');
 	*/
 	app.use(app.router);
 /*Session Storage End */
+
+/* Helper Functions */
+
+function DirectToLogin(request, response) {
+	if (request.session) {
+		request.session.destroy();
+	}
+
+	resStr = swig.renderFile('views/index.html', {name: null});
+	response.send(resStr);
+}
+/*
+function validateUrl(message) {
+    var end_occur, finalLinks, first_occur, i, links, request, url, _i, _len;
+    request = require("request");
+    links = [];
+    finalLinks = [];
+    first_occur = 0;
+    while (true) {
+      first_occur = message.indexOf("www", first_occur);
+      if (first_occur === -1) {
+        break;
+      }
+      end_occur = message.indexOf(" ", first_occur);
+      links.push(message.slice(first_occur, +end_occur + 1 || 9e9));
+      first_occur = end_occur;
+    }
+    first_occur = 0;
+    while (true) {
+      first_occur = message.indexOf("http", first_occur);
+      if (first_occur === -1) {
+        break;
+      }
+      end_occur = message.indexOf(" ", first_occur);
+      links.push(message.slice(first_occur, +end_occur + 1 || 9e9));
+      first_occur = end_occur;
+    }
+    for (i = _i = 0, _len = links.length; _i < _len; i = ++_i) {
+      url = links[i];
+      if (url[0] === "w") {
+        links[i] = "http://" + url;
+      }
+    }
+    return links;
+  };
+  */
+
+ function urlRE(message) {
+ 	geturl = new RegExp(
+          "(^|[ \t\r\n])((ftp|http|https|gopher|mailto|news|nntp|telnet|wais|file|prospero|aim|webcal):(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))"
+         ,"g"
+       );
+
+ 	matches = message.match(geturl);
+ 	
+ 	console.log(matches);
+ 	if(matches == null){
+ 		return [];
+ 	}
+ 	return matches;
+ }
+
+/* End Helper Functions */
 
 
 /* Mongo shit. Dunno if we need it yet. Probably will in the future. So I leave it here.
@@ -166,7 +229,9 @@ app.get('/userInfo', function(req, res){
 		console.log(fbRes);
 		res.send(fbRes.data[0]);
 	})
-})
+});
+
+app.get('/')
 
 /* Experimental get all friends - not finished */
 /*
@@ -207,6 +272,11 @@ app.get('/messagesInThread', function(req, res){
 		var query = "SELECT author_id,body,created_time FROM message WHERE thread_id = " + req.query.thread_id + "  ORDER BY created_time ASC";
 		graph.fql(query, function(err, fbRes){
 			console.log(err);
+			
+			for(i in fbRes.data){
+				console.log(fbRes.data[i]);
+				fbRes.data[i].links = urlRE(fbRes.data[i].body);
+			}
 			console.log(fbRes);
 			res.send(fbRes.data);
 		});
@@ -293,18 +363,7 @@ app.get('/messagesInThread', function(req, res){
 */
 
 
-/* Helper Functions */
 
-function DirectToLogin(request, response) {
-	if (request.session) {
-		request.session.destroy();
-	}
-
-	resStr = swig.renderFile('views/index.html', {name: null});
-	response.send(resStr);
-}
-
-/* End Helper Functions */
 
 /* Listening for stuff */
 var port = process.env.PORT || 5000;
