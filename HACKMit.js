@@ -36,11 +36,16 @@ app.set('views', __dirname + '/views');
 
 	app.use(express.cookieParser());
 	app.use(express.session({
+		secret: "asdvpiubasdpiuasdpiausd"
+	}));
+	/*
+	app.use(express.session({
 		store: new MongoStore({
 			url: mongoUri
 		}),
 		secret: "avbpiubargu9badvar498vpbarv",
 		}));
+	*/
 	app.use(app.router);
 /*Session Storage End */
 
@@ -100,10 +105,12 @@ app.get('/logout', function(req, response){
 
 
 app.get('/', function(req, response){
+	console.log(req.session);
 
 	/* If there is a code in the session, they've logged in before */
 	if(req.session.code){
-		var query = "SELECT name FROM user WHERE uid = me()"
+		console.log('IN IF NOWWWWWWWWWWW');
+		var query = "SELECT first_name FROM user WHERE uid = me()"
 		graph.setAccessToken(req.session.code);
 
 		graph.fql(query, function(err, res){
@@ -111,6 +118,7 @@ app.get('/', function(req, response){
 			 * which should be caught by the req.session.code above, but what the hell
 			 * amirite?
 			 */
+			 console.log(res);
 			if(res.data.length > 0) {
 				resStr = swig.renderFile('views/index.html', {name: res.data[0].first_name});
 			} else {
@@ -119,7 +127,7 @@ app.get('/', function(req, response){
 			response.send(resStr);
 		});
 	} else {
-		DirectToLogin(req, res);
+		DirectToLogin(req, response);
 	} 
 });
 
@@ -199,7 +207,7 @@ app.get('/messagesInThread', function(req, res){
 
 
 	} else {
-		res.send('');
+		res.send(400);
 	}
 })
 
