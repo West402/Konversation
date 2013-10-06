@@ -73,11 +73,12 @@ buildConversation = (id, me) ->
 	buildMessages = (conversation) -> 
 
 		build = (message) -> 
-			str = "#{message.body}"
-			str.replace( /(https?:\/\/)?((?:www|ftp)\.[-A-Za-z0-9+&@#\/%?=~_|$!:,.;]+?)[\r\n\s]+/ , '<a href="$1$2">$1</a>' )
-			$m = $("<div/>", class:"message", text: str)
 
-			console.log str
+			str = "#{message.body}"
+			for link in message.links
+				str = str.replace( "#{link}" , "<a href=\"#{link}\">#{link}</a>" )
+			
+			$m = $("<div/>", class:"message", text: "").html(str)
 
 			if "#{message.author_id}" is "#{me}" then $m.addClass("to")
 			else $m.addClass("from")
@@ -94,22 +95,22 @@ buildConversation = (id, me) ->
 	$(".CONVO").removeClass("hidden")
 
 
-articleView =  () -> 
+linkView =  () -> 
 
-	buildArticles = (Articles) -> 
+	buildLinks = (Links) -> 
 
-		build = (article) -> 
+		build = (link) -> 
 
 			$a = $("<div/>", class: "article")
 			$img = $("<img/>", src: "article.image")
-			$title = $("<div/>", class: "articleTitle" text: "#{artlce.title}")
+			$title = $("<div/>", class: "articleTitle", text: "#{artlce.title}")
 			$text = $("<div/>", class: "articleText", text: "#{article.text}")
 			$a.append($img).append($title).append($text)
 
-		for article in Articles
-			build(article)
+		for link in links
+			build(link)
 
-	$.get("/sonething", chatID, build)
+	$.get("/sonething", chatID, buildLinks)
 
 
 setAndBindPageSizes = (r) -> 

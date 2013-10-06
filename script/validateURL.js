@@ -3,8 +3,7 @@
   var validateUrl;
 
   validateUrl = function(message) {
-    var end_occur, finalLinks, first_occur, i, links, request, url, _i, _len;
-    request = require("request");
+    var end_occur, finalLinks, first_occur, i, links, url, _i, _len;
     links = [];
     finalLinks = [];
     first_occur = 0;
@@ -14,6 +13,9 @@
         break;
       }
       end_occur = message.indexOf(" ", first_occur);
+      if (end_occur === -1) {
+        end_occur = message.length;
+      }
       links.push(message.slice(first_occur, +end_occur + 1 || 9e9));
       first_occur = end_occur;
     }
@@ -24,6 +26,9 @@
         break;
       }
       end_occur = message.indexOf(" ", first_occur);
+      if (end_occur === -1) {
+        break;
+      }
       links.push(message.slice(first_occur, +end_occur + 1 || 9e9));
       first_occur = end_occur;
     }
@@ -35,5 +40,7 @@
     }
     return links;
   };
+
+  console.log(validateUrl("www.facebook.com/sdfsdfsdf"));
 
 }).call(this);
