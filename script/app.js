@@ -27,30 +27,53 @@
   askWhichFriend = function() {
     var buildFriends;
     $("#firstButton").text("Please select a conversation...").delay(1000).fadeTo(300, 1).delay(2000);
-    $.get("/allFriends", buildFriends);
     $(".ninja").removeClass("hidden");
     buildFriends = function(Friends) {
       var build, friend, _i, _len, _results;
-      console.log(Friends);
-      build = function(friend) {
-        var $friend, $mostRecent, $name, $pic;
+      build = function(thread) {
+        var $friend, $mostRecent, $name, getUserInfo, recipient, _i, _len, _ref;
+        console.log(thread);
         $friend = $("<div/>", {
           "class": "friend",
-          id: "" + friend.name
-        });
-        $pic = $("<img/>", {
-          "class": "friendPIC",
-          src: "" + friends.pic_square
-        });
-        $name = $("<div/>", {
-          "class": "friendNAME",
-          text: "" + friend.name
+          id: "" + thread.thread_id
         });
         $mostRecent = $("<div/>", {
           "class": "FmostRECENT",
-          text: "" + friend.mostRecent
+          text: "" + thread.snippet
         });
-        return $friend.append($pic).append($name).append($mostRecent);
+        $name = $("<div/>", {
+          "class": "friendNAME",
+          text: ""
+        });
+        getUserInfo = function(friend) {
+          var $pic;
+          if ($name.text() === "") {
+            $name.text("" + friend.name);
+          } else {
+            $name.text($name.text() + (" & " + friend.name));
+          }
+          $pic = $("<img/>", {
+            "class": "friendPIC",
+            src: "" + friend.pic_square
+          });
+          return $friend.append($pic).append($name).append($mostRecent);
+        };
+        _ref = thread.recipients;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          recipient = _ref[_i];
+          if (!(recipient !== thread.viewer_id)) {
+            continue;
+          }
+          console.log("recipient: " + recipient);
+          console.log("thread.viewer_id: " + thread.viewer_id);
+          $.get("/userInfo", {
+            uid: recipient
+          }, getUserInfo);
+        }
+        $friend.click(function() {
+          return null;
+        });
+        return $friend;
       };
       _results = [];
       for (_i = 0, _len = Friends.length; _i < _len; _i++) {
@@ -59,7 +82,7 @@
       }
       return _results;
     };
-    return null;
+    return $.get("/allThreads", buildFriends);
   };
 
   buidConversation = function() {
@@ -85,7 +108,7 @@
       var h, w;
       w = $(window).width();
       h = $(window).height();
-      return $(".ninja").height(9 * h / 10);
+      return $(".ninja").height(8 * h / 10);
     };
     $(window).bind('resize', function() {
       return setSizes();

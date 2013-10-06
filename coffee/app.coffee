@@ -31,28 +31,39 @@ askWhichFriend = () ->
 					 .fadeTo(300, 1)
 					 .delay(2000)
 
-	$.get("/allFriends", buildFriends)
-
-
 	$(".ninja").removeClass("hidden")	
 
 	buildFriends = (Friends) ->
 
-		console.log Friends
+		build = (thread) -> 
 
-		build = (friend) -> 
+			console.log thread
 
-			$friend = $("<div/>", class: "friend", id: "#{friend.name}")
-			$pic = $("<img/>", class: "friendPIC", src: "#{friends.pic_square}")
-			$name = $("<div/>", class: "friendNAME", text: "#{friend.name}")
-			$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{friend.mostRecent}")
-			$friend.append($pic).append($name).append($mostRecent)
+			$friend = $("<div/>", class: "friend", id: "#{thread.thread_id}")
+			$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{thread.snippet}")
+			$name = $("<div/>", class: "friendNAME", text: "")
+
+			getUserInfo = (friend) -> 
+
+				if $name.text() is "" then $name.text("#{friend.name}")
+				else $name.text( $name.text() + " & #{friend.name}")
+				$pic = $("<img/>", class: "friendPIC", src: "#{friend.pic_square}")
+				$friend.append($pic).append($name).append($mostRecent)						
+
+			for recipient in thread.recipients when recipient isnt thread.viewer_id
+				console.log "recipient: " + recipient
+				console.log "thread.viewer_id: " + thread.viewer_id
+				$.get("/userInfo", {uid : recipient}, getUserInfo)
+
+			$friend.click -> null
+
+			return $friend	
+
 
 		for friend in Friends
 			$(".FRIENDS").append( build(friend) )
 
-
-	return null
+	$.get("/allThreads", buildFriends)
 	
 	
 
@@ -75,7 +86,7 @@ setAndBindPageSizes = () ->
 	setSizes = () -> 
 		w = $(window).width()
 		h = $(window).height()
-		$(".ninja").height(9 * h / 10)
+		$(".ninja").height(8 * h / 10)
 		
 
 

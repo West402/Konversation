@@ -94,7 +94,7 @@ a:hover { text-decoration: underline; }
 	width: 600px;
 	margin: auto;
 	position: relative;
-	-webkit-mask-image: -webkit-gradient(linear, left 20%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+	-webkit-mask-image: -webkit-gradient(linear, left 80%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
 
 
 
@@ -109,20 +109,19 @@ a:hover { text-decoration: underline; }
 	padding-right: 15px;
 	padding-left: 7px;
 	padding-bottom: 15px;
-	background-color: lightgray;
+/*	background-color: #B0B0B0; */
 
-	-webkit-mask-image: -webkit-gradient(linear, left 20%, left top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+	-webkit-mask-image: -webkit-gradient(linear, left 12%, left top, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
 
 }
 
 .friend {
 
 	background-color: white;
-	height: 150px;
-
+	height: 50px;
 	width: 550px;
 	margin: auto;
-	margin-top: 2px;
+	margin-top: 20px;
 
 
 
@@ -131,22 +130,24 @@ a:hover { text-decoration: underline; }
 	float: left;
 	width: 50px;
 	height: 50px;
-	margin-top: 50px;
-	margin-bottom: 50px;
+	margin-left: 20px;
+	margin-right: 20px;
 	background-color: black;
 
 } .friendNAME {
 
 	margin-left: 10px;
-	font-weight: 400;
+	font-weight: 300;
 	font-size: 16px;
 	font-style: bold;
 
 
-} .fmostRECENT {
+} .FmostRECENT {
 
 	font-weight: 300;
-	font-size: 16px;
+	font-size: 14px;
+	margin-top: 2px;
+	color: #606060;
 
 
 }
