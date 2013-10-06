@@ -18,11 +18,7 @@ transition = () ->
 					 .fadeTo(200, 0)
 					 .delay(200)
 					 .fadeTo(0, 0, askWhichFriend)
-###	$(".welcome").removeClass("initial")
-				 .addClass("move")
-				 .delay(1800)
-				 .addClass("second")
-###
+
 
 askWhichFriend = () -> 
 
@@ -89,16 +85,18 @@ buildConversation = (id, me) ->
 
 	$(".CONVO").removeClass("hidden")
 
+articleView =  () -> 
+
+	
+
+
 
 
 setAndBindPageSizes = (r) -> 
 
 	setSizes = () -> 
-		#w = $(window).width()
 		h = $(window).height()
 		$(".ninja").height(r * h / 10)
-		
-
 
 	$(window).bind 'resize', -> 
 		setSizes()
