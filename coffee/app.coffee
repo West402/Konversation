@@ -9,8 +9,8 @@ buidpage = () ->
 
 #	bindClickEvents()
 	transition()
+	setAndBindPageSizes()
 
-#bindClickEvents = () -> null
 
 transition = () -> 
 
@@ -30,23 +30,42 @@ askWhichFriend = () ->
 					 .delay(1000)
 					 .fadeTo(300, 1)
 					 .delay(2000)
-#					 .fadeTo(200, 0)
 
-	buildFriends = () -> 
+	$(".ninja").removeClass("hidden")	
 
-		build = (friend) -> 
+	buildFriends = (Friends) ->
 
-				$friend = $("<div/>", class: "friend", id: "#{friend.name}")
-				$pic = $("<img/>", class: "friendPIC", src: "#{friends.image}")
-				$name = $("<div/>", class: "friendNAME", text: "#{friend.name}")
-				$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{friend.mostRecent}")
-				$friend.append($pic).append($name).append($mostRecent)
+		build = (thread) -> 
+
+			console.log thread
+
+			$friend = $("<div/>", class: "friend", id: "#{thread.thread_id}")
+			$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{thread.snippet}")
+			$name = $("<div/>", class: "friendNAME", text: "")
+
+			getUserInfo = (friend) -> 
+
+				if $name.text() is "" then $name.text("#{friend.name}")
+				else $name.text( $name.text() + " & #{friend.name}")
+				$pic = $("<img/>", class: "friendPIC", src: "#{friend.pic_square}")
+				$friend.append($pic).append($name).append($mostRecent)						
+
+			for recipient in thread.recipients when recipient isnt thread.viewer_id
+				console.log "recipient: " + recipient
+				console.log "thread.viewer_id: " + thread.viewer_id
+				$.get("/userInfo", {uid : recipient}, getUserInfo)
+
+			$friend.click -> null
+
+			return $friend	
 
 
 		for friend in Friends
-			FRIENDS.append( build(friend) )
+			$(".FRIENDS").append( build(friend) )
 
-		
+	$.get("/allThreads", buildFriends)
+	
+	
 
 buidConversation = () ->
 
@@ -64,16 +83,17 @@ buidConversation = () ->
 
 setAndBindPageSizes = () -> 
 
-	setSize = () -> 
-
+	setSizes = () -> 
 		w = $(window).width()
-		$(".CONVO").width()
+		h = $(window).height()
+		$(".ninja").height(8 * h / 10)
+		
 
 
 	$(window).bind 'resize', -> 
-		setSize()
+		setSizes()
 
-	setSize()
+	setSizes()
 
 
 
