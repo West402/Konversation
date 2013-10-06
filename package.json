@@ -8,6 +8,7 @@
         "swig": "x",
         "fbgraph": "x",
         "connect-mongo": "x",
+        "async": "x",
         "request": "x"
     },
     "engines": {
