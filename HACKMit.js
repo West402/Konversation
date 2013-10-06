@@ -142,7 +142,7 @@ app.get('/allThreads', function(req, res){
 
 	graph.setAccessToken(req.session.code);
 	
-	query = "SELECT thread_id,snippet,snippet_author,updated_time,message_count,recipients FROM thread WHERE folder_id = 0";
+	query = "SELECT thread_id,snippet,snippet_author,updated_time,message_count,recipients,viewer_id FROM thread WHERE folder_id = 0";
 	graph.fql(query, function(err, fbRes){
 		console.log(err);
 		console.log(fbRes);
@@ -205,7 +205,7 @@ app.get('/messagesInThread', function(req, res){
 		var thread_id = req.query.thread_id;
 		graph.setAccessToken(req.session.code);
 
-		var query = "SELECT author_id,body,created_time,source FROM message WHERE thread_id = " + req.query.thread_id;
+		var query = "SELECT author_id,body,created_time,source FROM message WHERE thread_id = " + req.query.thread_id + " Limit 500";
 		graph.fql(query, function(err, fbRes){
 			console.log(err);
 			console.log(fbRes);
