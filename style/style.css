@@ -29,7 +29,7 @@ a:hover { text-decoration: underline; }
 
 }
 
-.initial { bottom: 10%; } .second { bottom: 80%; }
+.initial { bottom: 5%; } .second { bottom: 80%; }
 
 
 .welcome h1 {
@@ -73,34 +73,77 @@ a:hover { text-decoration: underline; }
 }
 
 @keyframes MoveD {
-	0% { bottom: 10%; }
+	0% { bottom: 5%; }
 	100% { bottom: 80%; }
 }
 
 @-webkit-keyframes MoveD {
-	0% { bottom: 10%; }
+	0% { bottom: 5%; }
 	100% { bottom: 80%; }
 }
 
 @-moz-keyframes MoveD {
-	0% { bottom: 10%; }
+	0% { bottom:5%; }
 	100% { bottom: 80%; }
 }
 
 
 
+.ninja {
+
+	width: 600px;
+	margin: auto;
+	position: relative;
+	
+
+}
+
 
 .FRIENDS {
 
-
-
+	overflow: scroll;
+	width: 100%;
+	height: 100%;
+	padding-right: 15px;
+	padding-left: 7px;
+	padding-bottom: 15px;
+	background-color: lightgray;
 
 
 }
 
 .friend {
 
+	background-color: white;
+	height: 150px;
 
+	width: 550px;
+	margin: auto;
+	margin-top: 2px;
+
+
+
+} .friendPIC {
+
+	float: left;
+	width: 50px;
+	height: 50px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	background-color: black;
+
+} .friendNAME {
+
+	margin-left: 10px;
+	font-weight: 400;
+	font-size: 16px;
+	font-style: bold;
+
+
+} .fmostRECENT {
+
+	font-weight: 300;
+	font-size: 16px;
 
 
 }
@@ -132,7 +175,10 @@ a:hover { text-decoration: underline; }
 
 
 
+/*
+-webkit-mask-image: -webkit-gradient(linear, left 90%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)))"
 
+*/
  
 
 

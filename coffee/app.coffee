@@ -9,8 +9,8 @@ buidpage = () ->
 
 #	bindClickEvents()
 	transition()
+	setAndBindPageSizes()
 
-#bindClickEvents = () -> null
 
 transition = () -> 
 
@@ -30,23 +30,33 @@ askWhichFriend = () ->
 					 .delay(1000)
 					 .fadeTo(300, 1)
 					 .delay(2000)
-#					 .fadeTo(200, 0)
 
-	buildFriends = () -> 
+
+
+	$(".ninja").removeClass("hidden")	
+
+#	buildFriends = () -> 
+
+	for friend in [0..10]  #Friends
+		$(".FRIENDS").append( $("<div/>", class: "friend") )
+
+###
 
 		build = (friend) -> 
 
 				$friend = $("<div/>", class: "friend", id: "#{friend.name}")
-				$pic = $("<img/>", class: "friendPIC", src: "#{friends.image}")
+				$pic = $("<img/>", class: "friendPIC", src: "#{friends.pic_square}")
 				$name = $("<div/>", class: "friendNAME", text: "#{friend.name}")
 				$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{friend.mostRecent}")
 				$friend.append($pic).append($name).append($mostRecent)
 
+		for friend in [0..10]  #Friends
+			$(".FRIENDS").append( build(friend) )
 
-		for friend in Friends
-			FRIENDS.append( build(friend) )
+	buildFriends()
 
-		
+#	$.get(/allfriends, )
+###		
 
 buidConversation = () ->
 
@@ -64,16 +74,17 @@ buidConversation = () ->
 
 setAndBindPageSizes = () -> 
 
-	setSize = () -> 
-
+	setSizes = () -> 
 		w = $(window).width()
-		$(".CONVO").width()
+		h = $(window).height()
+		$(".ninja").height(7.5 * h / 10)
+		
 
 
 	$(window).bind 'resize', -> 
-		setSize()
+		setSizes()
 
-	setSize()
+	setSizes()
 
 
 
