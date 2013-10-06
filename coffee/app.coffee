@@ -1,5 +1,6 @@
 #assume there is an object
 conversation = []
+links = []
 
 # also assume there is jquery
 
@@ -72,11 +73,18 @@ buildConversation = (id, me) ->
 	buildMessages = (conversation) -> 
 
 		build = (message) -> 
+			str = "#{message.body}"
+			str.replace( /(https?:\/\/)?((?:www|ftp)\.[-A-Za-z0-9+&@#\/%?=~_|$!:,.;]+?)[\r\n\s]+/ , '<a href="$1$2">$1</a>' )
+			$m = $("<div/>", class:"message", text: str)
 
-			$m = $("<div/>", class:"message", text: "#{message.body}")
+			console.log str
+
 			if "#{message.author_id}" is "#{me}" then $m.addClass("to")
 			else $m.addClass("from")
 
+			links.push(message.links)
+
+			return $m
 
 		for message in conversation
 			$convo.append build(message)
@@ -85,11 +93,23 @@ buildConversation = (id, me) ->
 
 	$(".CONVO").removeClass("hidden")
 
+
 articleView =  () -> 
 
-	
+	buildArticles = (Articles) -> 
 
+		build = (article) -> 
 
+			$a = $("<div/>", class: "article")
+			$img = $("<img/>", src: "article.image")
+			$title = $("<div/>", class: "articleTitle" text: "#{artlce.title}")
+			$text = $("<div/>", class: "articleText", text: "#{article.text}")
+			$a.append($img).append($title).append($text)
+
+		for article in Articles
+			build(article)
+
+	$.get("/sonething", chatID, build)
 
 
 setAndBindPageSizes = (r) -> 
@@ -109,7 +129,7 @@ bindClickEvents = () ->
 
 	$(".logo").click -> 
 		$(".CONVO").children().remove()
-		$(".ninja").height(8 * h = $(window).height() / 10)
+		setAndBindPageSizes(8)
 		$(".welcome").removeClass("moveDown").fadeIn(200)
 		$(".logo").fadeOut(200)
 		askWhichFriend()

@@ -111,7 +111,28 @@
     return $(".CONVO").removeClass("hidden");
   };
 
-  articleView = function() {};
+  articleView = function() {
+    var buildArticles;
+    buildArticles = function(Articles) {
+      var article, build, _i, _len, _results;
+      build = function(article) {
+        var $a, $img;
+        $a = $("<div/>", {
+          "class": "article"
+        });
+        return $img = $("<img/>", {
+          src: "article."
+        });
+      };
+      _results = [];
+      for (_i = 0, _len = Articles.length; _i < _len; _i++) {
+        article = Articles[_i];
+        _results.push(build(article));
+      }
+      return _results;
+    };
+    return $.get("/sonething", chatID, build);
+  };
 
   setAndBindPageSizes = function(r) {
     var setSizes;
