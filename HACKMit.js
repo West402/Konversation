@@ -3,6 +3,7 @@ var express = require("express");
 var escape = require('escape-html');
 var swig = require('swig');
 var app = express();
+//var async = require('async');
 app.use(express.logger());
 app.use(express.bodyParser());
 app.use('/', express.static(__dirname + '/'));
@@ -109,7 +110,6 @@ app.get('/', function(req, response){
 
 	/* If there is a code in the session, they've logged in before */
 	if(req.session.code){
-		console.log('IN IF NOWWWWWWWWWWW');
 		var query = "SELECT first_name FROM user WHERE uid = me()"
 		graph.setAccessToken(req.session.code);
 
@@ -195,7 +195,6 @@ app.get('/allFriends', function(req, res){
 });
 */
 
-
 app.get('/messagesInThread', function(req, res){
 	if(!req.session.code) {
 		res.send(401);
@@ -205,7 +204,7 @@ app.get('/messagesInThread', function(req, res){
 		var thread_id = req.query.thread_id;
 		graph.setAccessToken(req.session.code);
 
-		var query = "SELECT author_id,body,created_time,source FROM message WHERE thread_id = " + req.query.thread_id + " Limit 500";
+		var query = "SELECT author_id,body,created_time FROM message WHERE thread_id = " + req.query.thread_id + "  ORDER BY created_time ASC";
 		graph.fql(query, function(err, fbRes){
 			console.log(err);
 			console.log(fbRes);
@@ -219,6 +218,79 @@ app.get('/messagesInThread', function(req, res){
 	}
 })
 
+/* Attempt at getting all messages by making async my bitch */
+/*
+app.get('/messagesInThread', function(req, res){
+	if(!req.session.code) {
+		res.send(401);
+		return;
+	}
+	if(req.query.thread_id) {
+		var thread_id = req.query.thread_id;
+		graph.setAccessToken(req.session.code);
+
+		var url_next = thread_id;
+		var messages = [];
+		var num = 5;
+		console.log('MESSAGES. ALL THE MESSAGES.');
+		async.doWhilst(
+			function(callback) {
+				console.log('IN THE MIDDLE WHATWHAT');
+				graph.get('me/threads', {action: 'read', tid: url_next}, function(err, fbRes){
+					console.log(err);
+					console.log(fbRes);
+					//res.send(fbRes.data);
+					//url_next = 'asd';
+					console.log('IN GRAPH YAY')
+					console.log(fbRes.paging)
+					num--;
+					if(fbRes.paging.previous.indexOf('__previous') != -1){
+						var link = fbRes.paging.previous;
+						var idStart = link.indexOf('=t_id.') + 6;
+						var idEnd = idStart + 10;
+
+						url_next = link.slice(idStart, idEnd);
+						console.log(url_next);
+					} else {
+						url_next = null;
+					}
+					messages.push(fbRes.data);
+					console.log('NUM: ' + num)
+					if(num == 0) {
+						callback('error motherfucker');
+					}
+					if(url_next !== null){
+						callback(null);
+					} else {
+						callback('error motherfucker');
+					}
+					
+					//callback('hellooooo');
+
+				});
+
+			},
+			function() {
+				console.log('checking... ' + (url_next !== null));
+				return (num !== 0);
+				return (url_next !== null);
+			},
+			function (err) {
+				console.log('DANGER WILL ROBINSON');
+				//console.log('ABOUT TO LIST ALL THE MESSAGES LOOK OUT')
+				//console.log(messages);
+				res.send(messages);
+			}
+		);	
+			
+
+
+
+	} else {
+		res.send(400);
+	}
+});
+*/
 
 
 /* Helper Functions */
