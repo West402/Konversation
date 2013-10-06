@@ -1,13 +1,13 @@
 {
-    "name": "mingo",
+    "name": "Konversation",
     "version": "0.0.1",
     "dependencies": {
         "mongodb": "x",
         "escape-html": "x",
         "express": "x",
-        "ejs": "x",
         "swig": "x",
-        "fbgraph": "x"
+        "fbgraph": "x",
+        "connect-mongo": "x"
     },
     "engines": {
         "node": "x",
