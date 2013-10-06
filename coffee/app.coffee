@@ -77,7 +77,7 @@ buildConversation = (id, me) ->
 
 		build = (message) -> 
 
-			$m = $("<div/>", id: "#{message.id}", class:"message", text: "#{message.body}")
+			$m = $("<div/>", class:"message", text: "#{message.body}")
 			if "#{message.author_id}" is "#{me}" then $m.addClass("to")
 			else $m.addClass("from")
 
@@ -110,7 +110,7 @@ setAndBindPageSizes = () ->
 bindClickEvents = () -> 
 
 	$(".logo").click -> 
-		$("#CONVO").fadeOut(200).children().remove()
+		$(".CONVO").children().remove()
 		$(".ninja").height(8 * h = $(window).height() / 10)
 		$(".welcome").removeClass("moveDown").fadeIn(200)
 		$(".logo").fadeOut(200)
