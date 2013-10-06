@@ -11,7 +11,7 @@
   buidpage = function() {
     bindClickEvents();
     transition();
-    return setAndBindPageSizes();
+    return setAndBindPageSizes(8);
   };
 
   transition = function() {
@@ -89,7 +89,7 @@
     $(".FRIENDS").fadeOut(200).addClass("hidden");
     $(".welcome").addClass("moveDown").delay(600).fadeOut(400);
     $(".logo").hide().removeClass("hidden").delay(1000).fadeIn(200, function() {
-      return $(".ninja").height($(window).height());
+      return setAndBindPageSizes(10);
     });
     buildMessages = function(conversation) {
       var build, message, _i, _len, _results;
@@ -118,12 +118,12 @@
     return $(".CONVO").removeClass("hidden");
   };
 
-  setAndBindPageSizes = function() {
+  setAndBindPageSizes = function(r) {
     var setSizes;
     setSizes = function() {
       var h;
       h = $(window).height();
-      return $(".ninja").height(8 * h / 10);
+      return $(".ninja").height(r * h / 10);
     };
     $(window).bind('resize', function() {
       return setSizes();
@@ -134,7 +134,7 @@
   bindClickEvents = function() {
     return $(".logo").click(function() {
       var h;
-      $(".CONVO").children().remove();
+      $(".CONVO").fadeOut(200).children().remove();
       $(".ninja").height(8 * (h = $(window).height() / 10));
       $(".welcome").removeClass("moveDown").fadeIn(200);
       $(".logo").fadeOut(200);
