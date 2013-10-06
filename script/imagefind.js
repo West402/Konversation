@@ -6,22 +6,16 @@
     var request;
     request = require("request");
     return request.head(url, function(error, response) {
-      var headers, key, value, _results;
+      var headers, key, value;
       headers = response.headers;
-      _results = [];
       for (key in headers) {
         value = headers[key];
         if (key === 'content-type') {
           if (value.slice(0, 5) === 'image') {
-            _results.push(console.log(true));
-          } else {
-            _results.push(void 0);
+            return true;
           }
-        } else {
-          _results.push(void 0);
         }
       }
-      return _results;
     });
   };
 
