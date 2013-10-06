@@ -29,55 +29,65 @@ askWhichFriend = () ->
 	$("#firstButton").text("Please select a conversation...")
 					 .delay(1000)
 					 .fadeTo(300, 1)
-					 .delay(2000)
-
-	$(".ninja").removeClass("hidden")	
+					 .delay(2000)	
 
 	buildFriends = (Friends) ->
 
 		build = (thread) -> 
 
-			console.log thread
-
-			$friend = $("<div/>", class: "friend", id: "#{thread.thread_id}")
+			$thread = $("<div/>", class: "friend", id: "#{thread.thread_id}")
 			$mostRecent = $("<div/>", class: "FmostRECENT", text: "#{thread.snippet}")
 			$name = $("<div/>", class: "friendNAME", text: "")
 
 			getUserInfo = (friend) -> 
 
-				if $name.text() is "" then $name.text("#{friend.name}")
+				if $name.text() is "" 
+					$name.text("#{friend.name}")
+					$thread.append($("<img/>", class: "friendPIC", src: "#{friend.pic_square}"))
 				else $name.text( $name.text() + " & #{friend.name}")
-				$pic = $("<img/>", class: "friendPIC", src: "#{friend.pic_square}")
-				$friend.append($pic).append($name).append($mostRecent)						
+				$thread.append($name).append($mostRecent)						
 
-			for recipient in thread.recipients when recipient isnt thread.viewer_id
-				console.log "recipient: " + recipient
-				console.log "thread.viewer_id: " + thread.viewer_id
+			for recipient, i in thread.recipients when "#{recipient}" isnt "#{thread.viewer_id}"
 				$.get("/userInfo", {uid : recipient}, getUserInfo)
 
-			$friend.click -> null
+			$thread.click -> buildConversation(thread.thread_id, thread.viewer_id)
 
-			return $friend	
+			return $thread	
 
 
 		for friend in Friends
-			$(".FRIENDS").append( build(friend) )
+			$(".FRIENDS").append( build(friend))
 
 	$.get("/allThreads", buildFriends)
-	
-	
 
-buidConversation = () ->
+	$(".ninja").removeClass("hidden")
+	$(".FRIENDS").hide().delay(800).fadeIn(200)
+		
+
+buildConversation = (id, me) ->
 
 	$convo = $(".CONVO")
+	$("#firstButton").fadeTo(200, 0)
+	$(".FRIENDS").fadeOut(200).addClass("hidden")
+	$(".welcome").addClass("moveDown").delay(600).fadeOut(400)
+	$(".logo").hide().removeClass("hidden").delay(1000).fadeIn(200, -> 
+		$(".ninja").height($(window).height()) )
 
-	for message in conversation
-		$convo.append build(message)
+	buildMessages = (conversation) -> 
+
+		build = (message) -> 
+
+			$m = $("<div/>", id: "#{message.id}", class:"message", text: "#{message.body}")
+			if "#{message.author_id}" is "#{me}" then $m.addClass("to")
+			else $m.addClass("from")
 
 
-	build = (message) -> 
+		for message in conversation
+			$convo.append build(message)
 
-		$m = $("<div/>", id: "#{message.id}", class: "#{message.direction}", text: "#{message.text}")
+	$.get("/messagesInThread", {thread_id:id}, buildMessages)
+
+	$(".CONVO").removeClass("hidden")
 
 
 
