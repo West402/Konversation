@@ -201,9 +201,17 @@ app.get('/messagesInThread', function(req, res){
 		res.send(401);
 		return;
 	}
-	if(req.query.friendID) {
-		var friendID = req.query.friendID;
+	if(req.query.thread_id) {
+		var thread_id = req.query.thread_id;
 		graph.setAccessToken(req.session.code);
+
+		var query = "SELECT author_id,body,created_time,source FROM message WHERE thread_id = " + req.query.thread_id;
+		graph.fql(query, function(err, fbRes){
+			console.log(err);
+			console.log(fbRes);
+			res.send(fbRes.data);
+		});
+
 
 
 	} else {
