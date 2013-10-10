@@ -1,6 +1,5 @@
 
 
-
 isImage = (url) ->
 	#npm install request
 	request = require("request")
@@ -10,6 +9,7 @@ isImage = (url) ->
 		for key, value of headers
 			if key is 'content-type'
 				if value[0..4] is'image'
-					return true	
+					return  true	
+
 
 
