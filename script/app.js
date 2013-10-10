@@ -87,7 +87,7 @@
       return setAndBindPageSizes(10);
     });
     buildMessages = function(conversation) {
-      var build, message, _i, _len, _results;
+      var build, message, _i, _len;
       build = function(message) {
         var $m, link, str, _i, _len, _ref;
         str = "" + message.body;
@@ -108,12 +108,14 @@
         links.push(message.links);
         return $m;
       };
-      _results = [];
       for (_i = 0, _len = conversation.length; _i < _len; _i++) {
         message = conversation[_i];
-        _results.push($convo.append(build(message)));
+        $convo.append(build(message));
       }
-      return _results;
+      return $convo.append($("<div/>", {
+        "class": "end",
+        text: 'END'
+      }));
     };
     $.get("/messagesInThread", {
       thread_id: id
@@ -122,35 +124,33 @@
   };
 
   linkView = function() {
-    var buildLinks;
-    buildLinks = function(Links) {
-      var build, link, _i, _len, _results;
-      build = function(link) {
-        var $a, $img, $text, $title;
-        $a = $("<div/>", {
-          "class": "article"
-        });
-        $img = $("<img/>", {
-          src: "article.image"
-        });
-        $title = $("<div/>", {
-          "class": "articleTitle",
-          text: "" + artlce.title
-        });
-        $text = $("<div/>", {
-          "class": "articleText",
-          text: "" + article.text
-        });
-        return $a.append($img).append($title).append($text);
-      };
-      _results = [];
-      for (_i = 0, _len = links.length; _i < _len; _i++) {
-        link = links[_i];
-        _results.push(build(link));
-      }
-      return _results;
+    var build, link, _i, _len, _results;
+    build = function(link) {
+      var $a, $img, $text, $title;
+      $a = $("<div/>", {
+        "class": "article"
+      });
+      $img = $("<img/>", {
+        src: "article.image"
+      });
+      $title = $("<div/>", {
+        "class": "articleTitle",
+        text: "" + artlce.title
+      });
+      $text = $("<div/>", {
+        "class": "articleText",
+        text: "" + article.text
+      });
+      $a.append($img).append($title).append($text);
+      return $(".linkPane").append($a);
     };
-    return $.get("/sonething", chatID, buildLinks);
+    _results = [];
+    for (_i = 0, _len = links.length; _i < _len; _i++) {
+      link = links[_i];
+      console.log(link);
+      _results.push($.get("" + link, build));
+    }
+    return _results;
   };
 
   setAndBindPageSizes = function(r) {
@@ -158,7 +158,8 @@
     setSizes = function() {
       var h;
       h = $(window).height();
-      return $(".ninja").height(r * h / 10);
+      $(".ninja").height(r * h / 10);
+      return $(".linkPane").height(h);
     };
     $(window).bind('resize', function() {
       return setSizes();
@@ -167,12 +168,17 @@
   };
 
   bindClickEvents = function() {
-    return $(".logo").click(function() {
+    $(".logo").click(function() {
       $(".CONVO").children().remove();
       setAndBindPageSizes(8);
       $(".welcome").removeClass("moveDown").fadeIn(200);
-      $(".logo").fadeOut(200);
+      $(".logo, articleView").fadeOut(200);
       return askWhichFriend();
+    });
+    return $(".articleView").click(function() {
+      $(".CONVO").children().remove();
+      $(".logo").fadeOut(200);
+      return linkView();
     });
   };
 

@@ -67,6 +67,7 @@ buildConversation = (id, me) ->
 	$("#firstButton").fadeTo(200, 0)
 	$(".FRIENDS").fadeOut(200).addClass("hidden")
 	$(".welcome").addClass("moveDown").delay(600).fadeOut(400)
+#	$(".viewButton").hide().removeClass("hidden").delay(1000).fadeIn(200)
 	$(".logo").hide().removeClass("hidden").delay(1000).fadeIn(200, -> 
 		setAndBindPageSizes(10) )
 
@@ -89,28 +90,31 @@ buildConversation = (id, me) ->
 
 		for message in conversation
 			$convo.append build(message)
+		$convo.append($("<div/>", class: "end", text: 'END'))
 
 	$.get("/messagesInThread", {thread_id:id}, buildMessages)
 
 	$(".CONVO").removeClass("hidden")
 
+#	$(".viewButton").click -> linkView()
+
 
 linkView =  () -> 
 
-	buildLinks = (Links) -> 
+	build = (link) -> 
 
-		build = (link) -> 
+		$a = $("<div/>", class: "article")
+		$img = $("<img/>", src: "article.image")
+		$title = $("<div/>", class: "articleTitle", text: "#{artlce.title}")
+		$text = $("<div/>", class: "articleText", text: "#{article.text}")
+		$a.append($img).append($title).append($text)
+		$(".linkPane").append($a)
 
-			$a = $("<div/>", class: "article")
-			$img = $("<img/>", src: "article.image")
-			$title = $("<div/>", class: "articleTitle", text: "#{artlce.title}")
-			$text = $("<div/>", class: "articleText", text: "#{article.text}")
-			$a.append($img).append($title).append($text)
+	for link in links
+		console.log link
+		$.get("#{link}", build)
 
-		for link in links
-			build(link)
-
-	$.get("/sonething", chatID, buildLinks)
+	
 
 
 setAndBindPageSizes = (r) -> 
@@ -118,6 +122,7 @@ setAndBindPageSizes = (r) ->
 	setSizes = () -> 
 		h = $(window).height()
 		$(".ninja").height(r * h / 10)
+		$(".linkPane").height(h)
 
 	$(window).bind 'resize', -> 
 		setSizes()
@@ -132,9 +137,13 @@ bindClickEvents = () ->
 		$(".CONVO").children().remove()
 		setAndBindPageSizes(8)
 		$(".welcome").removeClass("moveDown").fadeIn(200)
-		$(".logo").fadeOut(200)
+		$(".logo, articleView").fadeOut(200)
 		askWhichFriend()
 
+	$(".articleView").click -> 
+		$(".CONVO").children().remove()
+		$(".logo").fadeOut(200)
+		linkView()
 
 
 
